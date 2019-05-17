@@ -114,6 +114,27 @@ install_yarn() {
   echo "Installed yarn $(yarn --version)"
 }
 
+restore_elm_cache() {
+  if [ -e "$build_dir/elm-stuff" ]; then
+    echo "- skipping cache restore, exists" | indent
+  else
+    if [ -e "$cache_dir/elm-stuff" ]; then
+      echo "- restoring cache" | indent
+      mv "$cache_dir/elm-stuff" "$build_dir"
+    else
+      echo "- no cache detected" | indent
+    fi
+  fi
+}
+
+cache_elm_build() {
+  cp -R "$build_dir/elm-stuff" "$cache_dir"
+}
+
+install_elm() {
+  npm install -g --unsafe-perm elm@0.19.0-no-deps
+}
+
 install_and_cache_deps() {
   info "Installing and caching node modules"
   cd $assets_dir
